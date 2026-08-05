@@ -530,7 +530,13 @@ let blocks=[
  {id:crypto.randomUUID(),type:"links",visible:true,data:{items:[{label:"Falar pelo WhatsApp",phone:"31999999999",message:"Olá! Gostaria de saber mais.",emoji:"💬",kind:"whatsapp"},{label:"Ver meu Instagram",instagram:"anapsicologa",emoji:"📷",kind:"instagram"},{label:"Agendar atendimento",url:"https://calendly.com/",emoji:"📅",kind:"link"},{label:"Ver localização",address:"Belo Horizonte - MG",emoji:"📍",kind:"map"}]}},
  {id:crypto.randomUUID(),type:"text",visible:true,data:{eyebrow:"Apresentação",title:"Sobre mim",text:"Sou psicóloga clínica e acompanho adultos em processos relacionados à ansiedade, autoestima, relacionamentos e mudanças de vida.",photo:"",photoPosition:"above"}},
  {id:crypto.randomUUID(),type:"video",visible:true,data:{eyebrow:"Vídeos",title:"Conheça meu trabalho",before:"Antes de agendar, assista a esta breve apresentação.",url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",after:"Caso faça sentido para você, entre em contato."}},
- {id:crypto.randomUUID(),type:"faq",visible:true,data:{eyebrow:"Informações",title:"Dúvidas frequentes",items:[{q:"Como funciona o primeiro atendimento?",a:"O primeiro contato serve para compreender sua necessidade e explicar como funciona o acompanhamento."}]}}
+ {id:crypto.randomUUID(),type:"faq",visible:true,data:{eyebrow:"Informações",title:"Dúvidas frequentes",items:[
+{q:"Como funciona o primeiro atendimento?",a:"O primeiro encontro é um momento para compreender sua demanda, conhecer sua história e explicar como funciona o processo terapêutico. Também é uma oportunidade para tirar dúvidas e avaliar se este acompanhamento faz sentido para você."},
+{q:"O atendimento é sigiloso?",a:"Sim. Todo atendimento psicológico é protegido pelo sigilo profissional, garantindo privacidade e confidencialidade das informações compartilhadas."},
+{q:"Quanto tempo dura cada sessão?",a:"Em geral, cada sessão tem duração aproximada de 50 minutos, podendo variar conforme a abordagem e as necessidades do atendimento."},
+{q:"Os atendimentos podem ser online?",a:"Sim. Os atendimentos podem ser ser realizados de forma online ou presencial, conforme a forma de trabalho do profissional."},
+{q:"Com que frequência acontecem as sessões?",a:"Normalmente, os encontros são semanais, mas a frequência pode ser definida de acordo com os objetivos e as necessidades de cada pessoa."}
+]}}
 ];
 
 function esc(v=""){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
@@ -717,7 +723,7 @@ function blockEditor(block,index){
  <div class="field"><label>Nome</label><input data-key="name" value="${esc(d.name)}"></div>
  <div class="grid2"><div class="field"><label>Profissão</label><input data-key="role" value="${esc(d.role)}"></div><div class="field"><label>Registro</label><input data-key="registry" value="${esc(d.registry)}"></div></div>
  <div class="field"><label>Descrição</label><textarea data-key="description">${esc(d.description)}</textarea></div>
- <div class="field"><label>Subtítulo</label><input data-key="city" value="${esc(d.city)}"></div>`;
+ <div class="field"><label>Cidade</label><input data-key="city" value="${esc(d.city)}"></div>`;
  if(block.type==="links")fields=`<div data-items="links">${d.items.map((x,i)=>`<div class="link-item-card ${x.editorCollapsed?"is-collapsed":""}">
 <div class="link-item-header">
 <strong>${esc(x.label||`Botão ${i+1}`)}</strong>
@@ -1029,7 +1035,7 @@ function blockColorClass(block){
 function renderBlockHtml(block){
  if(!block.visible)return"";
  const d=block.data;
- if(block.type==="hero")return `<section class="hero ${aclass(d.heroAlign||"center")}${blockColorClass(block)}" data-page-block="${block.id}"${blockColorStyle(block)}>${d.photo?`<div class="media-wrap ${aclass(d.imageAlign||"center")}"><img class="avatar" src="${d.photo}" alt=""></div>`:""}<span class="role">${esc(d.role)}</span><h1>${esc(d.name)}</h1>${d.registry?`<p class="registry">${esc(d.registry)}</p>`:""}<p class="lead">${esc(d.description)}</p>${d.city?`<div class="city">${esc(d.city)}</div>`:""}</section>`;
+ if(block.type==="hero")return `<section class="hero ${aclass(d.heroAlign||"center")}${blockColorClass(block)}" data-page-block="${block.id}"${blockColorStyle(block)}>${d.photo?`<div class="media-wrap ${aclass(d.imageAlign||"center")}"><img class="avatar" src="${d.photo}" alt=""></div>`:""}<span class="role">${esc(d.role)}</span><h1>${esc(d.name)}</h1>${d.registry?`<p class="registry">${esc(d.registry)}</p>`:""}<p class="lead">${esc(d.description)}</p>${d.city?`<div class="city">📍 ${esc(d.city)}</div>`:""}</section>`;
  if(block.type==="links")return `<section class="links ${aclass(d.buttonsAlign||"left")}${blockColorClass(block)}" data-page-block="${block.id}"${blockColorStyle(block)}>${d.items.filter(x=>x.label&&itemHref(x)).map((x,i)=>{const href=itemHref(x);return `<a class="link ${i===0?"featured":""}" href="${esc(href)}" target="_blank" rel="noopener noreferrer"><span class="ico">${esc(x.emoji||"🔗")}</span><span>${esc(x.label)}</span><b>↗</b></a>`}).join("")}</section>`;
  if(block.type==="text"){const img=d.photo?`<div class="media-wrap ${aclass(d.imageAlign||"center")}"><img class="content-img" src="${d.photo}" alt=""></div>`:"";return `<section class="section${blockColorClass(block)}" data-page-block="${block.id}"${blockColorStyle(block)}><div class="${aclass(d.titleAlign||"left")}">${d.eyebrow?`<span class="eyebrow">${esc(d.eyebrow)}</span>`:""}<h2>${esc(d.title)}</h2></div>${d.photoPosition==="above"?img:""}<p class="${aclass(d.textAlign||"left")}">${esc(d.text)}</p>${d.photoPosition==="below"?img:""}</section>`}
  if(block.type==="video"){
