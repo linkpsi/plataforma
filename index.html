@@ -611,7 +611,7 @@ function generateAutomaticPalette(){
  $("secondary").value=createSecondary(primary);
  $("buttonTextColor").value=readableText(primary);
  refreshPalettePreview();
- preview();
+ preview();scheduleAutoSave();
 }
 
 function themeVars(){
@@ -649,14 +649,14 @@ function renderBackgroundPalette(){
    customBackground=btn.dataset.backgroundColor||"";
    renderBackgroundPalette();
    refreshBackgroundColorUI();
-   preview();
+   preview();scheduleAutoSave();
  });
  $("backgroundExtendedColors").innerHTML=extendedColorGroupsHtml(customBackground,"data-background-extended");
  $("backgroundExtendedColors").querySelectorAll("[data-background-extended]").forEach(btn=>btn.onclick=()=>{
    customBackground=btn.dataset.backgroundExtended;
    renderBackgroundPalette();
    refreshBackgroundColorUI();
-   preview();
+   preview();scheduleAutoSave();
  });
 }
 function renderPageExtendedColors(){
@@ -852,7 +852,7 @@ function bindBlock(block,index,card){
  card.querySelectorAll("[data-key]").forEach(el=>{
    el.oninput=()=>{
      block.data[el.dataset.key]=el.value;
-     preview();
+     preview();scheduleAutoSave();
      focusBlock(block.id);
    };
    el.onchange=()=>{
@@ -867,7 +867,7 @@ function bindBlock(block,index,card){
        }
        renderBlocks(block.id);
      }
-     preview();
+     preview();scheduleAutoSave();
      focusBlock(block.id);
    };
  });
@@ -876,21 +876,21 @@ function bindBlock(block,index,card){
    e.stopPropagation();
    block.data.blockColor=btn.dataset.blockColor||"";
    renderBlocks(block.id);
-   preview();
+   preview();scheduleAutoSave();
    focusBlock(block.id);
  });
  card.querySelectorAll("[data-custom-block-color]").forEach(input=>{
    input.oninput=e=>{
      e.stopPropagation();
      block.data.blockColor=input.value;
-     preview();
+     preview();scheduleAutoSave();
      focusBlock(block.id);
    };
    input.onchange=e=>{
      e.stopPropagation();
      block.data.blockColor=input.value;
      renderBlocks(block.id);
-     preview();
+     preview();scheduleAutoSave();
      focusBlock(block.id);
    };
  });
@@ -903,7 +903,7 @@ function bindBlock(block,index,card){
  card.querySelectorAll("[data-extended-block-color]").forEach(btn=>btn.onclick=e=>{
    e.stopPropagation();
    block.data.blockColor=btn.dataset.extendedBlockColor;
-   renderBlocks(block.id);preview();focusBlock(block.id);
+   renderBlocks(block.id);preview();scheduleAutoSave();focusBlock(block.id);
  });
 
 
@@ -911,19 +911,19 @@ function bindBlock(block,index,card){
    e.stopPropagation();
    block.data[btn.dataset.alignKey]=btn.dataset.alignValue;
    renderBlocks(block.id);
-   preview();
+   preview();scheduleAutoSave();
    focusBlock(block.id);
  });
  card.querySelectorAll("[data-file]").forEach(el=>el.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader;r.onload=()=>{block.data[e.target.dataset.file]=r.result;preview()};r.readAsDataURL(f)});
- const addItem=card.querySelector("[data-add-item]");if(addItem)addItem.onclick=e=>{e.stopPropagation();block.data.items.push({label:"Novo botão",url:"https://",emoji:"🔗",kind:"link",editorCollapsed:false});renderBlocks(block.id);preview();focusBlock(block.id)};
- const addLocation=card.querySelector("[data-add-location]");if(addLocation)addLocation.onclick=()=>{block.data.items.push({label:"Ver localização",address:"",emoji:"📍",kind:"map"});renderBlocks(block.id);preview();focusBlock(block.id)};
+ const addItem=card.querySelector("[data-add-item]");if(addItem)addItem.onclick=e=>{e.stopPropagation();block.data.items.push({label:"Novo botão",url:"https://",emoji:"🔗",kind:"link",editorCollapsed:false});renderBlocks(block.id);preview();scheduleAutoSave();focusBlock(block.id)};
+ const addLocation=card.querySelector("[data-add-location]");if(addLocation)addLocation.onclick=()=>{block.data.items.push({label:"Ver localização",address:"",emoji:"📍",kind:"map"});renderBlocks(block.id);preview();scheduleAutoSave();focusBlock(block.id)};
  card.querySelectorAll("[data-item-label]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemLabel].label=el.value;preview()});
- card.querySelectorAll("[data-item-url]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemUrl].url=el.value;preview();focusBlock(block.id)});
- card.querySelectorAll("[data-item-address]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemAddress].address=el.value;preview();focusBlock(block.id)});
- card.querySelectorAll("[data-item-phone]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemPhone].phone=el.value;preview();focusBlock(block.id)});
- card.querySelectorAll("[data-item-message]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemMessage].message=el.value;preview();focusBlock(block.id)});
- card.querySelectorAll("[data-item-instagram]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemInstagram].instagram=el.value;preview();focusBlock(block.id)});
- card.querySelectorAll("[data-item-kind]").forEach(el=>el.onchange=()=>{const item=block.data.items[+el.dataset.itemKind];item.kind=el.value;if(el.value==="map"){item.emoji="📍";item.address=item.address||""}if(el.value==="whatsapp"){item.emoji="💬";item.phone=item.phone||"";item.message=item.message||""}if(el.value==="instagram"){item.emoji="📷";item.instagram=item.instagram||""}if(el.value==="link"){item.emoji=item.emoji||"🔗";item.url=item.url||"https://"}renderBlocks(block.id);preview();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-url]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemUrl].url=el.value;preview();scheduleAutoSave();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-address]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemAddress].address=el.value;preview();scheduleAutoSave();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-phone]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemPhone].phone=el.value;preview();scheduleAutoSave();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-message]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemMessage].message=el.value;preview();scheduleAutoSave();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-instagram]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.itemInstagram].instagram=el.value;preview();scheduleAutoSave();focusBlock(block.id)});
+ card.querySelectorAll("[data-item-kind]").forEach(el=>el.onchange=()=>{const item=block.data.items[+el.dataset.itemKind];item.kind=el.value;if(el.value==="map"){item.emoji="📍";item.address=item.address||""}if(el.value==="whatsapp"){item.emoji="💬";item.phone=item.phone||"";item.message=item.message||""}if(el.value==="instagram"){item.emoji="📷";item.instagram=item.instagram||""}if(el.value==="link"){item.emoji=item.emoji||"🔗";item.url=item.url||"https://"}renderBlocks(block.id);preview();scheduleAutoSave();focusBlock(block.id)});
  card.querySelectorAll("[data-item-emoji]").forEach(el=>el.onchange=()=>{block.data.items[+el.dataset.itemEmoji].emoji=el.value;preview()});
 
  
@@ -942,7 +942,7 @@ function bindBlock(block,index,card){
    if(i<=0)return;
    [block.data.items[i-1],block.data.items[i]]=[block.data.items[i],block.data.items[i-1]];
    renderBlocks(block.id);
-   preview();
+   preview();scheduleAutoSave();
    focusBlock(block.id);
  });
  card.querySelectorAll("[data-move-item-down]").forEach(el=>el.onclick=e=>{
@@ -951,7 +951,7 @@ function bindBlock(block,index,card){
    if(i<0||i>=block.data.items.length-1)return;
    [block.data.items[i+1],block.data.items[i]]=[block.data.items[i],block.data.items[i+1]];
    renderBlocks(block.id);
-   preview();
+   preview();scheduleAutoSave();
    focusBlock(block.id);
  });
  card.querySelectorAll("[data-duplicate-item]").forEach(el=>el.onclick=e=>{
@@ -964,10 +964,10 @@ function bindBlock(block,index,card){
    copy.label=(copy.label||"Novo botão")+" — cópia";
    block.data.items.splice(i+1,0,copy);
    renderBlocks(block.id);
-   preview();
+   preview();scheduleAutoSave();
    focusBlock(block.id);
  });
- card.querySelectorAll("[data-remove-item]").forEach(el=>el.onclick=e=>{e.stopPropagation();block.data.items.splice(+el.dataset.removeItem,1);renderBlocks(block.id);preview();focusBlock(block.id)});
+ card.querySelectorAll("[data-remove-item]").forEach(el=>el.onclick=e=>{e.stopPropagation();block.data.items.splice(+el.dataset.removeItem,1);renderBlocks(block.id);preview();scheduleAutoSave();focusBlock(block.id)});
  const addFaq=card.querySelector("[data-add-faq]");if(addFaq)addFaq.onclick=()=>{block.data.items.push({q:"Nova pergunta",a:"Digite aqui a resposta."});renderBlocks(block.id);preview()};
  card.querySelectorAll("[data-faq-q]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.faqQ].q=el.value;preview()});
  card.querySelectorAll("[data-faq-a]").forEach(el=>el.oninput=()=>{block.data.items[+el.dataset.faqA].a=el.value;preview()});
@@ -1130,19 +1130,19 @@ $("toggleBackgroundMoreColors").onclick=()=>{
 $("backgroundCustomColor").oninput=()=>{
  customBackground=$("backgroundCustomColor").value;
  refreshBackgroundColorUI();
- preview();
+ preview();scheduleAutoSave();
 };
 
 $("titleSpacing").oninput=()=>{
  $("titleSpacingValue").textContent=`${$("titleSpacing").value}em`;
- preview();
+ preview();scheduleAutoSave();
 };
 
 $("backgroundCustomColor").onchange=()=>{
  customBackground=$("backgroundCustomColor").value;
  renderBackgroundPalette();
  refreshBackgroundColorUI();
- preview();
+ preview();scheduleAutoSave();
 };
 
 $("togglePageMoreColors").onclick=()=>{
@@ -1406,9 +1406,33 @@ $("copyGithubNames").onclick=async()=>{
   prompt("Copie os nomes:",names);
  }
 };
+
+let __autoSaveTimer;
+function scheduleAutoSave(){
+  clearTimeout(__autoSaveTimer);
+  __autoSaveTimer=setTimeout(()=>{
+    try{
+      localStorage.setItem("linkpsi_autosave",JSON.stringify(saveData()));
+    }catch(e){}
+  },800);
+}
+window.addEventListener("load",()=>{
+  try{
+    const raw=localStorage.getItem("linkpsi_autosave");
+    if(raw){
+      const data=JSON.parse(raw);
+      if(typeof loadData==="function"){
+        loadData(data);
+        if(typeof renderBlocks==="function") renderBlocks();
+        if(typeof preview==="function") preview();scheduleAutoSave();
+      }
+    }
+  }catch(e){}
+});
+
 $("saveProject").onclick=()=>{const x=saveData(),s=getSaved(),i=s.findIndex(v=>v.id===x.id);i>=0?s[i]=x:s.push(x);editingId=x.id;setSaved(s);alert("Projeto salvo neste navegador.")};
 $("newProject").onclick=()=>location.reload();
-renderPalette("primaryPalette","primary");renderPageExtendedColors();renderBackgroundPalette();refreshBackgroundColorUI();renderAdd();renderBlocks();renderSaved();refreshPalettePreview();preview();
+renderPalette("primaryPalette","primary");renderPageExtendedColors();renderBackgroundPalette();refreshBackgroundColorUI();renderAdd();renderBlocks();renderSaved();refreshPalettePreview();preview();scheduleAutoSave();
 </script>
 </body>
 </html>
